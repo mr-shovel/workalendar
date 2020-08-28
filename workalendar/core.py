@@ -858,16 +858,25 @@ class CoreCalendar:
     def export_to_ical(self, period=[2000, 2030], target_path=None):
         """
         Export the calendar to iCal (RFC 5545) format.
+
         Parameters
         ----------
-        target_path : str
-            the name or path of the exported file
-        period : [int, int]
+        period: [int, int]
             start and end year (inclusive) of calendar
+            Default is [2000, 2030]
+
+        target_path: str
+            the name or path of the exported file. If this argument is missing,
+            the function will return the ical content.
+
         """
+        first_year, last_year = self._get_ical_period(period)
+        if target_path:
+            # Generate filename path before calculate the holidays
+            target_path = self._get_ical_target_path(target_path)
+
         # fetch holidays
         holidays = []
-        first_year, last_year = self._get_ical_period(period)
         for year in range(first_year, last_year + 1):
             holidays.extend(self.holidays(year))
 
@@ -899,7 +908,6 @@ class CoreCalendar:
 
         if target_path:
             # save iCal file
-            target_path = self._get_ical_target_path(target_path)
             with open(target_path, 'w+') as export_file:
                 export_file.write(ics)
             return
