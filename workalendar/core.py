@@ -801,6 +801,8 @@ class CoreCalendar:
     def _get_ical_period(self, period=None):
         """
         Return a usable period for iCal export
+
+        Default period is [2000, 2030]
         """
         # Default value.
         if not period:
